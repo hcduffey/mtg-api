@@ -9,8 +9,8 @@ require('./config/db.connect');
 const deckController = require('./controllers/deck_controller');
 
 // MIDDLEWARE
-app.use(cors());
-app.use(morgan("dev"));
+app.use(cors()); // currently no CORS restrictions for the API
+app.use(morgan("tiny")); // can be changed to more extensive logging if needed 
 app.use(express.json());
 
 // ROUTER

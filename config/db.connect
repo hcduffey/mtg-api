@@ -1,3 +1,5 @@
+// Sets up database connection using the MONGODB_URI paramater in a .env file
+
 require('dotenv').config();
 const mongoose = require('mongoose');
 

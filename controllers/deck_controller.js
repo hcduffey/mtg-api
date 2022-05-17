@@ -1,3 +1,5 @@
+// Controller for all routes to perform CRUD on the deck resource
+
 // Set up router
 const express = require('express');
 const router = express.Router();
