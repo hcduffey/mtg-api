@@ -10,6 +10,10 @@ const deckSchema = Schema({
                     trim: true,
                     required: [true, "a valid id is required for cards"]
                 }, 
+                name: {
+                    type: String,
+                    trim: true  
+                },
                 imageUrl: {
                     type: String, 
                     trim: true,
