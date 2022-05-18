@@ -4,11 +4,36 @@
 const express = require('express');
 const router = express.Router();
 
+// imports for authentication
+
+let jwt = require('jsonwebtoken');
+let bcrypt = require('bcrypt');
+
 // Model used by controller
 const Deck = require('../models/Deck');
 
+// Middleware for deck routes
+// https://www.bezkoder.com/node-js-mongodb-auth-jwt/
+const verifyToken = (req, res, next) => {
+    let token = req.headers["x-access-token"];
+    if (!token) {
+      return res.status(403).json({ message: "No token provided!" });
+    }
+    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Unauthorized!" });
+      }
+      req.userId = decoded.id;
+      next();
+    });
+};
+
+const verifyUser = async (req, res, next) => {
+
+}
+
 //create route
-router.post("/", async (req,res) => {
+router.post("/", [verifyToken, verifyUser], async (req,res) => {
     try {
         let decks = await Deck.create(req.body);
         res.json(decks);
@@ -19,7 +44,7 @@ router.post("/", async (req,res) => {
 });
 
 // read routes
-router.get("/", async (req,res) => {
+router.get("/", [verifyToken, verifyUser], async (req,res) => {
     try {
         res.json(await Deck.find({}));
     }
@@ -28,7 +53,7 @@ router.get("/", async (req,res) => {
     }
 });
 
-router.get("/:id", async (req,res) => {
+router.get("/:id", [verifyToken, verifyUser], async (req,res) => {
     try {
         res.json(await Deck.findOne({_id:req.params.id}));
     }
@@ -38,7 +63,7 @@ router.get("/:id", async (req,res) => {
 });
 
 // update route
-router.put("/:id", async (req,res) => {
+router.put("/:id", [verifyToken, verifyUser], async (req,res) => {
     try {
         res.json(await Deck.findByIdAndUpdate(req.params.id, req.body));
     }
@@ -48,7 +73,7 @@ router.put("/:id", async (req,res) => {
 });
 
 //delete route
-router.delete("/:id", async (req,res) => {
+router.delete("/:id", [verifyToken, verifyUser], async (req,res) => {
     try {
         res.json(await Deck.findByIdAndDelete(req.params.id));
     }
