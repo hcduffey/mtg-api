@@ -29,7 +29,7 @@ router.post("/", async (req,res) => {
             return res.json({token: token, user: validUser.username});
         }
         else {
-            return res.json({error: err});
+            return res.json({error: "password is incorrect"});
         }
     }
     catch(err) { return res.json({error: err}); }
