@@ -20,8 +20,8 @@ router.post("/", async (req,res) => {
             return res.json({error: "could not find user"});
         }
 
-        const validLogin = bcrypt.hashSync(password, validUser.password);
-
+        const validLogin = await bcrypt.compare(password, validUser.password);
+        
         if(validLogin) {
             let token = jwt.sign({ id: validUser._id }, process.env.SECRET, {
                 expiresIn: 86400 
