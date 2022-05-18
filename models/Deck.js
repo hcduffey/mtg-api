@@ -24,7 +24,11 @@ const deckSchema = Schema({
                     type: Number,
                     default: 1
                 }
-    }]
+    }],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 const Deck = mongoose.model("Decks", deckSchema);
