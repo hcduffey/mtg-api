@@ -11,7 +11,7 @@ const authController = require('./controllers/auth_controller');
 
 // MIDDLEWARE
 app.use(cors()); // currently no CORS restrictions for the API
-app.use(morgan("tiny")); // can be changed to more extensive logging if needed 
+app.use(morgan("dev")); // can be changed to more extensive logging if needed 
 app.use(express.json());
 
 // ROUTER

@@ -28,15 +28,17 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-const verifyUser = async (req, res, next) => {
-
-}
-
 //create route
-router.post("/", [verifyToken, verifyUser], async (req,res) => {
+router.post("/", verifyToken, async (req,res) => {
     try {
-        let decks = await Deck.create(req.body);
-        res.json(decks);
+        const newDeck = {...req.body, user: req.userId};
+        console.log(newDeck);
+
+        if(await Deck.create(newDeck)) {
+            res.json({message: "create deck success"});
+        } else {
+            res.json({error: "error in creating deck"})
+        }
     }
     catch(err) {
         res.json({error: err});
@@ -44,18 +46,26 @@ router.post("/", [verifyToken, verifyUser], async (req,res) => {
 });
 
 // read routes
-router.get("/", [verifyToken, verifyUser], async (req,res) => {
+router.get("/", verifyToken, async (req,res) => {
     try {
-        res.json(await Deck.find({}));
+        const decks = await Deck.find({user: req.userId});
+        res.json(decks);
     }
     catch(err) {
         res.json(err);
     }
 });
 
-router.get("/:id", [verifyToken, verifyUser], async (req,res) => {
+router.get("/:id", verifyToken, async (req,res) => {
     try {
-        res.json(await Deck.findOne({_id:req.params.id}));
+        const findDeck = await Deck.findOne({_id:req.params.id, user: req.userId});
+        if(findDeck) {
+            res.json({message: "find deck success"});
+        }
+        else {
+            res.json({error: "could not find requested deck"});
+        }
+        
     }
     catch(err) {
         res.json(err);
@@ -63,9 +73,16 @@ router.get("/:id", [verifyToken, verifyUser], async (req,res) => {
 });
 
 // update route
-router.put("/:id", [verifyToken, verifyUser], async (req,res) => {
+router.put("/:id", verifyToken, async (req,res) => {
     try {
-        res.json(await Deck.findByIdAndUpdate(req.params.id, req.body));
+        let deletedDeck = await Deck.updateOne({_id: req.params.id, user: req.userId}, req.body);
+        if(deletedDeck) {
+            res.json({message: "successfully deleted deck"});
+        }
+        else {
+            console.log("update didn't work");
+            res.json({error: "user does not own deck"});
+        }
     }
     catch(err) {
         res.json(err);
@@ -73,9 +90,14 @@ router.put("/:id", [verifyToken, verifyUser], async (req,res) => {
 });
 
 //delete route
-router.delete("/:id", [verifyToken, verifyUser], async (req,res) => {
+router.delete("/:id", verifyToken, async (req,res) => {
     try {
-        res.json(await Deck.findByIdAndDelete(req.params.id));
+        if(await Deck.deleteOne({_id: req.params.id, user: req.userId})) {
+            res.json({message: "successfully deleted deck"});
+        }
+        else {
+            res.json({error: "user does not own deck"});
+        }
     }
     catch(err) {
         res.json(err);

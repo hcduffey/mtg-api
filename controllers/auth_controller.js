@@ -22,7 +22,6 @@ router.post("/", async (req,res) => {
 
         const validLogin = bcrypt.hashSync(password, validUser.password);
 
-
         if(validLogin) {
             let token = jwt.sign({ id: validUser._id }, process.env.SECRET, {
                 expiresIn: 86400 
@@ -40,9 +39,8 @@ router.post("/", async (req,res) => {
 router.post("/signup", async(req, res) => {
     try {
         const {username, password} = req.body;
-
+    
         const userExists = await User.findOne({username: username});
-        console.log(userExists);
         if(userExists) {
             return res.json({error: "username is taken"});
         }
