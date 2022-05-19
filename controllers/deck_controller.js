@@ -7,7 +7,6 @@ const router = express.Router();
 // imports for authentication
 
 let jwt = require('jsonwebtoken');
-let bcrypt = require('bcrypt');
 
 // Model used by controller
 const Deck = require('../models/Deck');
