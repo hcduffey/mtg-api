@@ -36,6 +36,8 @@
     <a href="https://github.com/hcduffey/mtg-api"><strong>Explore the code »</strong></a>
     <br />
     <br />
+    <a href="https://mtg-deck-backend.herokuapp.com">View Demo</a>
+    .
     <a href="https://github.com/hcduffey/mtg-api/issues">Report Bug</a>
     ·
     <a href="https://github.com/hcduffey/mtg-react-client">Explore React-client code</a>
